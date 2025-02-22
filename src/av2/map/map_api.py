@@ -27,7 +27,7 @@ import av2.geometry.interpolate as interp_utils
 import av2.utils.dilation_utils as dilation_utils
 import av2.utils.raster as raster_utils
 from av2.geometry.sim2 import Sim2
-from av2.map.map_primitives import Polyline
+from av2.map.map_primitives import Polyline, Point
 from av2.map.drivable_area import DrivableArea
 from av2.map.lane_segment import LaneSegment
 from av2.map.pedestrian_crossing import PedestrianCrossing
@@ -387,8 +387,9 @@ class ArgoverseStaticMap:
 
         for _, lane_segment in vector_lane_segments.items():
             if lane_segment.centerline is None or overwrite_centerline:
-                lane_segment.centerline = \
-                    Polyline(cls.get_lane_segment_centerline(lane_segment.id))
+                lane_segment.centerline = Polyline(
+                    [Point(p[0], p[1], p[2]) for p in cls.get_lane_segment_centerline(lane_segment.id)]
+                )
 
         return cls
 
