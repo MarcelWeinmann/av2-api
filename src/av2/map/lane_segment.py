@@ -94,6 +94,7 @@ class LaneSegment:
     lane_type: LaneType
     right_lane_boundary: Polyline
     left_lane_boundary: Polyline
+    centerline: Polyline
     right_mark_type: LaneMarkType
     left_mark_type: LaneMarkType
     predecessors: List[int]
@@ -111,6 +112,7 @@ class LaneSegment:
                 json_data["right_lane_boundary"]
             ),
             left_lane_boundary=Polyline.from_json_data(json_data["left_lane_boundary"]),
+            centerline=Polyline.from_json_data(json_data["centerline"]),
             right_mark_type=LaneMarkType(json_data["right_lane_mark_type"]),
             left_mark_type=LaneMarkType(json_data["left_lane_mark_type"]),
             right_neighbor_id=json_data["right_neighbor_id"],

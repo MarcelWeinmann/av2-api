@@ -27,6 +27,7 @@ import av2.geometry.interpolate as interp_utils
 import av2.utils.dilation_utils as dilation_utils
 import av2.utils.raster as raster_utils
 from av2.geometry.sim2 import Sim2
+from av2.map.map_primitives import Polyline
 from av2.map.drivable_area import DrivableArea
 from av2.map.lane_segment import LaneSegment
 from av2.map.pedestrian_crossing import PedestrianCrossing
@@ -343,7 +344,7 @@ class ArgoverseStaticMap:
     raster_ground_height_layer: Optional[GroundHeightLayer]
 
     @classmethod
-    def from_json(cls, static_map_path: Union[Path, UPath]) -> ArgoverseStaticMap:
+    def from_json(cls, static_map_path: Union[Path, UPath], overwrite_centerline=True) -> ArgoverseStaticMap:
         """Instantiate an Argoverse static map object (without raster data) from a JSON file containing map data.
 
         Args:
@@ -374,7 +375,7 @@ class ArgoverseStaticMap:
                 for pc in vector_data["pedestrian_crossings"].values()
             }
 
-        return cls(
+        cls = cls(
             log_id=log_id,
             vector_drivable_areas=vector_drivable_areas,
             vector_lane_segments=vector_lane_segments,
@@ -383,6 +384,13 @@ class ArgoverseStaticMap:
             raster_roi_layer=None,
             raster_ground_height_layer=None,
         )
+
+        for _, lane_segment in vector_lane_segments.items():
+            if lane_segment.centerline is None or overwrite_centerline:
+                lane_segment.centerline = \
+                    Polyline(cls.get_lane_segment_centerline(lane_segment.id))
+
+        return cls
 
     @classmethod
     def from_map_dir(
