@@ -386,7 +386,7 @@ class ArgoverseStaticMap:
         )
 
         for _, lane_segment in vector_lane_segments.items():
-            if lane_segment.centerline is None or overwrite_centerline:
+            if len(lane_segment.centerline.waypoints) == 0 or overwrite_centerline:
                 lane_segment.centerline = Polyline(
                     [Point(p[0], p[1], p[2]) for p in cls.get_lane_segment_centerline(lane_segment.id)]
                 )
