@@ -7,7 +7,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
-from typing import Tuple, Union
+from typing import Tuple, Union, cast
 
 import numpy as np
 
@@ -155,7 +155,7 @@ class PinholeCamera:
         """
         # convert cartesian to homogeneous coordinates.
         points_ego_hom = geometry_utils.cart_to_hom(points_ego)
-        points_cam: NDArrayFloat = self.extrinsics @ points_ego_hom.T
+        points_cam = self.extrinsics @ points_ego_hom.T
 
         # remove bottom row of all 1s.
         uv = self.intrinsics.K @ points_cam[:3, :]
@@ -163,7 +163,7 @@ class PinholeCamera:
         points_cam = points_cam.T
 
         if remove_nan:
-            uv, points_cam = remove_nan_values(uv, points_cam)
+            uv, points_cam = remove_nan_values(uv, points_cam)  # type: ignore
 
         uv = uv[:, :2] / uv[:, 2].reshape(-1, 1)
         is_valid_points = self.cull_to_view_frustum(uv, points_cam)
@@ -419,7 +419,7 @@ class PinholeCamera:
         ray_dirs = ray_dirs / np.linalg.norm(ray_dirs, axis=1, keepdims=True)
         if ray_dirs.shape[1] != 3:
             raise RuntimeError("Ray directions must be (N,3)")
-        return ray_dirs
+        return cast(NDArrayFloat, ray_dirs)
 
     def scale(self, scale: float) -> PinholeCamera:
         """Scale the intrinsics and image size.
