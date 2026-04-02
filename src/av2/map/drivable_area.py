@@ -34,7 +34,7 @@ class DrivableArea:
     def from_dict(cls, json_data: Dict[str, Any]) -> DrivableArea:
         """Generate object instance from dictionary read from JSON data."""
         point_list = [
-            Point(x=v["x"], y=v["y"], z=v["z"]) for v in json_data["area_boundary"]
+            Point(x=item["x"], y=item["y"], z=item["z"], v=item.get("v")) for item in json_data["area_boundary"]
         ]
         # append the first vertex to the end of vertex list
         point_list.append(point_list[0])

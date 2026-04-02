@@ -14,16 +14,21 @@ from av2.utils.typing import NDArrayFloat
 
 @dataclass
 class Point:
-    """Represents a single 3-d point."""
+    """Represents a single 4-d point."""
 
     x: float
     y: float
     z: float
+    v: float
 
     @property
     def xyz(self) -> NDArrayFloat:
         """Return (3,) vector."""
         return np.array([self.x, self.y, self.z])
+
+    def xyzv(self) -> NDArrayFloat:
+        """Return (4,) vector."""
+        return np.array([self.x, self.y, self.z, self.v])
 
     def __eq__(self, other: object) -> bool:
         """Check for equality with another Point object."""
@@ -44,6 +49,11 @@ class Polyline:
         """Return (N,3) array representing ordered waypoint coordinates."""
         return np.vstack([wpt.xyz for wpt in self.waypoints])
 
+    @property
+    def xyzv(self) -> NDArrayFloat:
+        """Return (N,4) array representing ordered waypoint coordinates."""
+        return np.vstack([wpt.xyzv for wpt in self.waypoints])
+
     @classmethod
     def from_json_data(cls, json_data: List[Dict[str, float]]) -> Polyline:
         """Generate object instance from list of dictionaries, read from JSON data.
@@ -54,7 +64,10 @@ class Polyline:
         Returns:
             `Polyline` object.
         """
-        return cls(waypoints=[Point(x=v["x"], y=v["y"], z=v["z"]) for v in json_data])
+        return cls(waypoints=[
+            Point(x=item["x"], y=item["y"], z=item["z"], v=item.get("v")) 
+            for item in json_data
+        ])
 
     @classmethod
     def from_array(cls, array: NDArrayFloat) -> Polyline:
