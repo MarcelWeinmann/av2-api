@@ -26,6 +26,7 @@ class Point:
         """Return (3,) vector."""
         return np.array([self.x, self.y, self.z])
 
+    @property
     def xyzv(self) -> NDArrayFloat:
         """Return (4,) vector."""
         return np.array([self.x, self.y, self.z, self.v])
