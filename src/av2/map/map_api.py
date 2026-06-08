@@ -368,9 +368,6 @@ class ArgoverseStaticMap:
         Returns:
             An Argoverse HD map.
         """
-        log_id = static_map_path.stem.split("log_map_archive_")[1]
-        vector_data = io.read_json_file(static_map_path)
-
         vector_drivable_areas = {
             da["id"]: DrivableArea.from_dict(da)
             for da in vector_data["drivable_areas"].values()
