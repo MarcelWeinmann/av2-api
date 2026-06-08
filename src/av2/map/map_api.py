@@ -370,20 +370,20 @@ class ArgoverseStaticMap:
         """
         vector_drivable_areas = {
             da["id"]: DrivableArea.from_dict(da)
-            for da in vector_data["drivable_areas"].values()
+            for da in static_map_dict["drivable_areas"].values()
         }
         vector_lane_segments = {
             ls["id"]: LaneSegment.from_dict(ls)
-            for ls in vector_data["lane_segments"].values()
+            for ls in static_map_dict["lane_segments"].values()
         }
 
-        if "pedestrian_crossings" not in vector_data:
+        if "pedestrian_crossings" not in static_map_dict:
             logger.error("Missing Pedestrian crossings!")
             vector_pedestrian_crossings = {}
         else:
             vector_pedestrian_crossings = {
                 pc["id"]: PedestrianCrossing.from_dict(pc)
-                for pc in vector_data["pedestrian_crossings"].values()
+                for pc in static_map_dict["pedestrian_crossings"].values()
             }
 
         cls = cls(
