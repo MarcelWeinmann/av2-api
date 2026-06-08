@@ -356,6 +356,20 @@ class ArgoverseStaticMap:
         """
         log_id = static_map_path.stem.split("log_map_archive_")[1]
         vector_data = io.read_json_file(static_map_path)
+        return cls.from_dict(cls, vector_data, overwrite_centerline)
+
+    @classmethod
+    def from_dict(cls, static_map_dict: Dict, overwrite_centerline=True) -> ArgoverseStaticMap:
+        """Instantiate an Argoverse static map object (without raster data) from a JSON file containing map data.
+
+        Args:
+            static_map_dict: Dict containing the map in json fromat.
+
+        Returns:
+            An Argoverse HD map.
+        """
+        log_id = static_map_path.stem.split("log_map_archive_")[1]
+        vector_data = io.read_json_file(static_map_path)
 
         vector_drivable_areas = {
             da["id"]: DrivableArea.from_dict(da)
