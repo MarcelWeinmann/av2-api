@@ -356,7 +356,7 @@ class ArgoverseStaticMap:
         """
         log_id = static_map_path.stem.split("log_map_archive_")[1]
         vector_data = io.read_json_file(static_map_path)
-        return cls.from_dict(cls, vector_data, log_id, overwrite_centerline)
+        return cls.from_dict(vector_data, log_id, overwrite_centerline)
 
     @classmethod
     def from_dict(cls, static_map_dict: Dict, log_id: str, overwrite_centerline=True) -> ArgoverseStaticMap:
